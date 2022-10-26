@@ -1,5 +1,6 @@
 from pyamaze import maze, agent
 from queue import PriorityQueue
+from time import time
 
 # heuristic for A* alg
 def h(cell1, cell2):
@@ -24,10 +25,15 @@ def aStar(m):
 	
 	aPath = {}
 	
+	
 	while not open.empty():
 		currCell = open.get()[2]
+		
+		# If goal node; break
 		if currCell == (1,1):
 			break
+			
+		# Check for neighboring nodes and calculate f(n)
 		for d in 'ESNW':
 			if m.maze_map[currCell][d] == True:
 				if d == 'E':
@@ -50,18 +56,23 @@ def aStar(m):
 	fwdPath = {}
 	cell = (1,1)
 	
+	# Starting from the goal node, reverse its path back to the start
+	# Store the path in fwdPath array
 	while cell != start:
 		fwdPath[aPath[cell]] = cell
 		cell = aPath[cell]
+	
 	return fwdPath
 
-m = maze(20, 20)
+# Set maze size
+m = maze(20,20)
 m.CreateMaze()
+
+# Call the A Star Algorithm Function
 path = aStar(m)
 
+# Enable footprints to see path in output
 a = agent(m, footprints = True)
 m.tracePath({a:path})
-
-print(m.maze_map)
 
 m.run()
